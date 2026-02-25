@@ -243,11 +243,23 @@ cpi_divisions <- read_csv("data/cpi-divisions.csv")
 
 ### Question 8
 
-a\. How many columns and how many rows does the `us_inflation` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
+a. How many columns and how many rows does the `us_inflation` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
 
-b\. How many columns and how many rows does the `cpi_divisions` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
+```{r}
+glimpse(us_inflation)
+dim(us_inflation)
+```
+The `us_inflation` dataset contains 132 rows and 4 columns. It includes annual inflation rates for the United States across different CPI divisions and years, with each row representing a specific division-year combination.
 
-c\. Create a new dataset by joining the `us_inflation` dataset with the `cpi_division_id` dataset.
+b. How many columns and how many rows does the `cpi_divisions` dataset have? What are the variables in it? Add a brief (1-2 sentences) narrative summarizing this information.
+
+```{r}
+glimpse(cpi_divisions)
+dim(cpi_divisions)
+```
+The `cpi_divisions` dataset contains 12 rows and 2 columns. It serves as a lookup table that links each CPI division ID to its corresponding description.
+
+c. Create a new dataset by joining the `us_inflation` dataset with the `cpi_division_id` dataset.
 
 -   Determine which type of join is the most appropriate one and use that.
 
@@ -257,15 +269,25 @@ c\. Create a new dataset by joining the `us_inflation` dataset with the `cpi_div
 
 Then, find the number of rows and columns of the resulting dataset and report the names of its columns. Add a brief (1-2 sentences) narrative summarizing this information.
 
+```{r}
+us_join <- us_inflation |>
+  left_join(cpi_divisions, 
+            by = c("cpi_division_id" = "id"))
+```
+```{r}
+glimpse(us_join)
+```
+The joined dataset contains 132 rows and 5 columns. It combines annual inflation data with CPI division descriptions, making the data easier to interpret by including both the division ID and its corresponding description.
+
 ### Question 9
 
-a\. Create a vector called `divisions_of_interest` which contains the descriptions or IDs of CPI divisions you want to visualize. Your `divisions_of_interest` should consist of no more than five divisions. If you're using descriptions, make sure that the spelling of your divisions matches how they appear in the dataset. Then, in 1-2 sentences, state why you chose these divisions.
+a. Create a vector called `divisions_of_interest` which contains the descriptions or IDs of CPI divisions you want to visualize. Your `divisions_of_interest` should consist of no more than five divisions. If you're using descriptions, make sure that the spelling of your divisions matches how they appear in the dataset. Then, in 1-2 sentences, state why you chose these divisions.
 
 ::: callout-tip
 Refer back to the guidance provided in [Question 6] if you're not sure how to create this vector.
 :::
 
-b\. In a single pipeline, filter your reshaped dataset to include only the `divisions_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` divisions in the data frame you created.
+b. In a single pipeline, filter your reshaped dataset to include only the `divisions_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` divisions in the data frame you created.
 
 ### Question 10
 
@@ -287,54 +309,3 @@ ggplot(...) +
   )
 ```
 
-::: render-commit-push
-If you haven't yet done so since Part 1, now is a good time to render, commit, and push. Make sure that you commit and push all changed documents and your Git pane is completely empty before proceeding.
-:::
-
-# Wrap-up
-
-## Submission
-
-Once you are finished with the lab, you will submit your final PDF document to Canvas.
-
-::: callout-warning
-Before you wrap up the assignment, make sure all of your documents are updated on your GitHub repo. We will be checking these to make sure you have been practicing how to commit and push changes.
-
-You must turn in a PDF file to the Canvas page by the submission deadline to be considered "on time".
-:::
-
-To submit your assignment:
-
--   Go to <http://www.Canvas.com> and click *Log in* in the top right corner.
--   Click *School Credentials* $\rightarrow$ *Duke NetID* and log in using your NetID credentials.
--   Click on your *REN R 213* course.
--   Click on the assignment, and you'll be prompted to submit it.
--   Mark all the pages associated with question. All the pages of your lab should be associated with at least one question (i.e., should be "checked").
-
-::: callout-important
-## Checklist
-
-Make sure you have:
-
--   attempted all questions
--   rendered your Quarto document
--   committed and pushed everything to your GitHub repository such that the Git pane in RStudio is empty
--   uploaded your PDF to Canvas
--   selected pages associated with each question on Canvas
-:::
-
-## Grading
-
-The lab is graded out of a total of 36 points.
-
-You can earn up to 4 points on each question:
-
--   4: Response shows excellent understanding and addresses all or almost all of the rubric items.
-
--   3: Response shows good understanding and addresses most of the rubric items.
-
--   2: Response shows understanding and addresses a majority of the rubric items.
-
--   1: Response shows effort and misses many of the rubric items.
-
--   0: Response does not show sufficient effort or understanding and/or is largely incomplete.
