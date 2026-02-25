@@ -1,8 +1,7 @@
 ---
 title: "Lab 3 - Data tidying and joining"
 author: "Deandra Rasheesa Maheswari"
-format: pdf
-
+format: html
 ---
 
 ```{r}
@@ -73,9 +72,13 @@ Do not save this new variable in `inf_ratio`, only calculate and display it so y
 
 Which country's inflation change is the largest over this time period? Did inflation increase of decrease between 1993 and 2021 in this country?
 
-::: callout-tip
-For this question you'll once again need to use variables whose names are numbers (years) in your pipeline. Make sure to surround the names of such variables with backticks (`` ` ``).
-:::
+```{r}
+country_inflation |>
+  mutate(inf_ratio = `2021` / `1993`) |>
+  arrange(desc(inf_ratio)) |>
+  select(country, inf_ratio)
+```
+New Zealand experienced largest inflation rate between 1993 and 2021, with an inflation ratio of 3.06. This indicates that the inflation in 2021 is three times higher than in 1993, meaning inflation increased over this period.
 
 ### Question 4
 
