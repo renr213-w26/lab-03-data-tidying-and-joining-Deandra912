@@ -1,7 +1,7 @@
 ---
 title: "Lab 3 - Data tidying and joining"
 author: "Deandra Rasheesa Maheswari"
-format: html
+format: pdf
 ---
 
 ```{r}
@@ -283,11 +283,32 @@ The joined dataset contains 132 rows and 5 columns. It combines annual inflation
 
 a. Create a vector called `divisions_of_interest` which contains the descriptions or IDs of CPI divisions you want to visualize. Your `divisions_of_interest` should consist of no more than five divisions. If you're using descriptions, make sure that the spelling of your divisions matches how they appear in the dataset. Then, in 1-2 sentences, state why you chose these divisions.
 
-::: callout-tip
-Refer back to the guidance provided in [Question 6] if you're not sure how to create this vector.
-:::
+```{r}
+us_join |>
+  distinct(description)
+```
+```{r}
+divisions_of_interest <- c(
+  "Food and non-Alcoholic beverages",
+  "Housing, water, electricity, gas and other fuels",
+  "Health",
+  "Transport",
+  "Education"
+)
+```
+
+ selected these divisions because they represent essential categories of household spending and are likely to show different inflation patterns.
 
 b. In a single pipeline, filter your reshaped dataset to include only the `divisions_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` divisions in the data frame you created.
+
+```{r}
+us_div_interest <- us_join |>
+  filter(description %in% divisions_of_interest)
+```
+```{r}
+us_div_interest |>
+  distinct(description)
+```
 
 ### Question 10
 
@@ -301,11 +322,22 @@ Using your data frame from the previous question, create a plot of annual inflat
 -   If your legend has labels that are too long, you can try moving the legend to the bottom and stack the labels vertically. *Hint:* The `legend.position` and `legend.direction` arguments of the `theme()` functions will be useful.
 
 ```{r}
-ggplot(...) +
-  ... +
+ggplot(us_div_interest,
+       aes(x = year, y = annual_inflation, color = description, shape = description)) +
+  geom_line() +
+  geom_point()+
+  labs(
+    title = "Annual Inflation by CPI Division in the United States",
+    subtitle = "Selected Divisions, between 2011-2021",
+    x = "Year",
+    y = "Annual Inflation Rate (%)",
+    color = "CPI Division",
+    shape = "CPI Division"
+  ) +
+  theme_minimal() +
   theme(
     legend.position = "bottom", 
     legend.direction = "vertical"
   )
 ```
-
+The plot shows clear differences across CPI divisions. Transport is the most volatile category, with sharp drops around 2015 and 2020 followed by strong rises. In contrast, housing, health, and education display more stable and gradual movements over time. Food prices fluctuate moderately but do not show extreme changes like transport. Overall, inflation dynamics vary considerably depending on the type of goods and services.
