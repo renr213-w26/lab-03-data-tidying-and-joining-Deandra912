@@ -144,28 +144,27 @@ The highest inflation rate observed between 1993 and 2021 occurred in Brazil in 
 a. Create a vector called `countries_of_interest` which contains the names of up tp five countries you want to visualize the inflation rates for over the years. For example, if these countries are Türkiye and United States, you can express this as follows:
 
 ```{r}
-countries_of_interest <- c("Türkiye", "United States")
+distinct(country_inflation)
 ```
-
-If they are Türkiye, United States, and China, you can express this as follows:
-
 ```{r}
 countries_of_interest <- c(
-  "Türkiye", "United States", "China (People's Republic of)"
+  "United States", "China (People's Republic of)", "India", "Indonesia", "Brazil"
 )
 ```
 
-So on and so forth... Then, in 1-2 sentences, state why you chose these countries.
+I chose these countries because they have some of the largest populations in the world. Inflation in these countries affects a large number of people, so it is interesting to see how price changes have evolved over time in these economies.
 
-::: callout-note
-Your `countries_of_interest` should consist of no more than five countries. Make sure that the spelling of your countries matches how they appear in the dataset.
-:::
+b. In a single pipeline, filter your reshaped dataset to include only the `countries_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` countries in the data frame you created.
 
-b\. In a single pipeline, filter your reshaped dataset to include only the `countries_of_interest` from part (a), and save the resulting data frame with a new name so you (1) can refer to this data frame later in your analysis and (2) do not overwrite the data frame you're starting with. Use a short but informative name. Then, in a new pipeline, find the `distinct()` countries in the data frame you created.
+```{r}
+inflation_pop <- inflation_longer |>
+  filter(country %in% countries_of_interest)
+```
 
-::: callout-tip
-The number of distinct countries in the filtered data frame you created in part (b) should equal the number of countries you chose in part (a). If it doesn't, you might have misspelled a country name or made a mistake in how to filter for these countries. Go back and check your code.
-:::
+```{r}
+inflation_pop |>
+  distinct(country)
+```
 
 ### Question 7
 
@@ -179,9 +178,39 @@ Requirements for the plot:
 -   The plot should have an appropriate title (and optionally a subtitle).
 -   Plot should be customized in at least one way – you could use a different than default color scale, or different than default theme, or some other customization.
 
-::: render-commit-push
-If you haven't yet done so, now is a good time to render, commit, and push. Make sure that you commit and push all changed documents and your Git pane is completely empty before proceeding.
-:::
+```{r}
+ggplot(inflation_pop, 
+       aes(x = year, y = annual_inflation, color = country, shape = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Annual Inflation Trends in Highly Populated Countries",
+    subtitle = "between 1993-2021",
+    x = "Year",
+    y = "Annual Inflation Rate (%)",
+    color = "Country",
+    shape = "Country"
+  ) +
+  theme_minimal()
+```
+Brazil depicts extremely high inflation in the early 1990s, reflecting a period of hyperinflation (around 2000%). This causes the scale of the plot to stretch significantly compared to the other countries, which experience much lower and more stable inflation rates. Therefore, I decided to filter the range of year from 1995 to 2021 to show more clear trend.
+
+```{r}
+ggplot(inflation_pop |> filter(year >= 1995), 
+       aes(x = year, y = annual_inflation, color = country, shape = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Annual Inflation Trends in Highly Populated Countries",
+    subtitle = "between 1995-2021",
+    x = "Year",
+    y = "Annual Inflation Rate (%)",
+    color = "Country",
+    shape = "Country"
+  ) +
+  theme_minimal()
+```
+Inflation trends vary quite a bit across these countries. Brazil and Indonesia show noticeable spikes in the late 1990s, while the United States and China remain relatively stable throughout the period. India’s inflation fluctuates but stays within a moderate range. Overall, inflation appears much more volatile in some emerging economies compared to the more stable patterns seen in the U.S. and China. 
 
 ## Part 2
 
